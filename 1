@@ -1,0 +1,53 @@
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import static org.junit.Assert.assertTrue;
+
+public class FooterTest {
+    private WebDriver driver;
+
+    @Before
+    public void setUp() {
+        // Настраиваем WebDriver
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver"); // Укажите путь к chromedriver
+        driver = new ChromeDriver();
+        driver.get("https://only.digital/");
+    }
+
+    @Test
+    public void testFooterElements() {
+        // Проверяем наличие футера
+        WebElement footer = driver.findElement(By.tagName("footer"));
+        assertTrue("Футер должен быть на странице", footer.isDisplayed());
+
+        // Проверка элементов в футере
+        checkElementInFooter(footer, "//*[text()='Начать проект']", "Кнопка 'Начать проект'");
+        checkElementInFooter(footer, "//*[text()='+7 (495) 740 99 79']", "Телефон");
+        checkElementInFooter(footer, "//*[text()='hello@only.com.ru']", "E-mail");
+
+        // Проверка социальных ссылок в футере
+        checkElementInFooter(footer, "//a[contains(@href, 'awwwards')]", "Ссылка на Awwwards");
+        checkElementInFooter(footer, "//a[contains(@href, 'vk.com')]", "Ссылка на ВКонтакте");
+        checkElementInFooter(footer, "//a[contains(@href, 't.me')]", "Ссылка на Telegram");
+        checkElementInFooter(footer, "//a[contains(@href, 'vimeo.com')]", "Ссылка на Vimeo");
+        checkElementInFooter(footer, "//a[contains(@href, 'behance.net')]", "Ссылка на Behance");
+    }
+
+    // Метод для упрощённой проверки наличия элемента в футере
+    private void checkElementInFooter(WebElement footer, String xpath, String elementDescription) {
+        WebElement element = footer.findElement(By.xpath(xpath));
+        assertTrue(elementDescription + " должна быть в футере", element.isDisplayed());
+    }
+
+    @After
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}
